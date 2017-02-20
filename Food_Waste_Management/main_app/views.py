@@ -1,9 +1,36 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from models import Student
+from serializers import StudentSerializer
 import requests
 from bs4 import BeautifulSoup
 # Create your views here.
+
+class StudentList(APIView):
+	def get(self, request):
+		students = Student.objects.all()
+		serializer = StudentSerializer(students, many = True);
+		return Response(serializer.data)
+
+	def post(self, request):
+		pass
+
+class StudentDetail(APIView):
+	def get(self,request, rollNum):
+			student = Student.objects.filter(rollNum = rollNum)
+			if(len(student) == 0):
+				return Response("Roll number not found")
+			else:
+				serializer = StudentSerializer(student[0])
+				return Response(serializer.data)
+
+	def post(self, request):
+		pass
+
+
 def index(request):
 	return render(request, 'index.html');
 
