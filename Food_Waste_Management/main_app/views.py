@@ -22,7 +22,7 @@ class StudentDetail(APIView):
 	def get(self,request, rollNum):
 			student = Student.objects.filter(rollNum = rollNum)
 			if(len(student) == 0):
-				return Response("Roll number not found")
+				return Response("Roll number not found", status = status.HTTP_400_BAD_REQUEST)
 			else:
 				serializer = StudentSerializer(student[0])
 				return Response(serializer.data)
